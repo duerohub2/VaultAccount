@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Account, AccountInput, Status } from "@/lib/types";
 import { b64, unb64, deriveKey, encrypt, decrypt, Payload } from "@/lib/crypto";
 const SALT = "vault_salt_v1", DATA = "vault_data_v1";
+const withName = (a: Account): Account => ({ ...a, name: a.name || a.email.split("@")[0] || "Tanpa Nama" });
 export function useVault() {
   const key = useRef<CryptoKey | null>(null);
   const [ready, setReady] = useState(false), [hasVault, setHasVault] = useState(false);
@@ -27,7 +28,7 @@ export function useVault() {
         const k = await deriveKey(pw, unb64(localStorage.getItem(SALT) ?? ""));
         const raw = localStorage.getItem(DATA);
         const list = raw ? await decrypt<Account[]>(k, JSON.parse(raw) as Payload) : [];
-        key.current = k; setAccounts(list);
+        key.current = k; setAccounts(list.map(withName));
       }
       setIdle(false); setUnlocked(true); return null;
     } catch { return "PASSWORD SALAH ATAU DATA RUSAK"; }
@@ -46,7 +47,7 @@ export function useVault() {
     if (!Array.isArray(parsed)) throw new Error("format");
     const st: Status[] = ["aktif", "limit", "block"], t = Date.now();
     const items: Account[] = parsed.filter((x): x is Record<string, unknown> => typeof x === "object" && x !== null && typeof (x as Record<string, unknown>).email === "string")
-      .map((x) => ({ id: crypto.randomUUID(), email: String(x.email), password: String(x.password ?? ""), phone: String(x.phone ?? ""),
+      .map((x) => withName({ id: crypto.randomUUID(), name: String(x.name ?? ""), email: String(x.email), password: String(x.password ?? ""), phone: String(x.phone ?? ""),
         status: st.includes(x.status as Status) ? (x.status as Status) : "aktif", note: String(x.note ?? ""),
         createdAt: typeof x.createdAt === "number" ? x.createdAt : t, updatedAt: t }));
     await save([...items, ...accounts]); return items.length;

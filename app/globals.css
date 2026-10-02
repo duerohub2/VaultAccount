@@ -1,0 +1,18 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+*{border-radius:0!important;-webkit-tap-highlight-color:transparent}
+body{@apply bg-bg text-ink font-body text-sm}
+:focus-visible{outline:3px solid #FF6B35;outline-offset:2px}
+@layer components{
+.nb{@apply bg-card border-[2.5px] border-ink shadow-[5px_5px_0_#0A0A0A]}
+.btn{@apply nb min-h-[44px] px-4 py-3 font-display font-bold uppercase text-sm tracking-wide transition-all duration-150 ease-[cubic-bezier(.2,.8,.3,1.2)] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none}
+.btn-p{@apply bg-accent}.btn-d{@apply bg-red text-card}
+.ico{@apply nb w-11 h-11 flex items-center justify-center shadow-[3px_3px_0_#0A0A0A] transition-all duration-150 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none}
+.inp{@apply w-full bg-card border-[2.5px] border-ink px-4 py-3 font-medium transition-all duration-150 focus:shadow-[4px_4px_0_#FF6B35] focus:-translate-x-0.5 focus:-translate-y-0.5 focus:outline-none}
+.lbl{@apply block text-[11px] font-bold uppercase tracking-[1px] mb-1.5}
+.badge{@apply border-[2.5px] border-ink px-2.5 py-1 font-display font-bold text-[10px] uppercase tracking-[.8px]}
+}
+@keyframes lockIn{from{opacity:0;transform:translate(-4px,-4px) rotate(-.5deg)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
